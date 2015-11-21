@@ -1,0 +1,18 @@
+{
+  "name": "knowledge-quest",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Steven Poulton <poulton.steven@googlemail.com>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
