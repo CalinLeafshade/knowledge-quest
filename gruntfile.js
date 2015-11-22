@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     grunt.initConfig({
         uglify: {
@@ -6,7 +6,9 @@ module.exports = function(grunt) {
                 options: {
                     sourceMap: true,
                 },
-                files: { 'public/app.js': ['src/js/app.js', 'src/**/*.js'] },
+                files: {
+                    'public/app.js': ['src/js/app.js', 'src/**/*.js']
+                },
             }
         },
         less: {
@@ -22,7 +24,9 @@ module.exports = function(grunt) {
                 options: {
                     paths: ["src/less"],
                     plugins: [
-                        new (require('less-plugin-autoprefix'))({browsers: ["last 2 versions"]})
+                        new(require('less-plugin-autoprefix'))({
+                            browsers: ["last 2 versions"]
+                        })
                     ],
                     modifyVars: {
                         //imgPath: '"http://mycdn.com/path/to/images"',
@@ -49,8 +53,8 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['<%= jshint.files %>'],
-                tasks: ['jshint', 'uglify']
+                files: ['src/js/*.js'],
+                tasks: ['uglify']
             },
             styleSheets: {
                 files: ['src/less/*.less'],
