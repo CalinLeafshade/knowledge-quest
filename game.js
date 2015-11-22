@@ -1,6 +1,7 @@
 module.exports = function (app, server) {
 
     var io = require('socket.io').listen(server);
+    var uuid = require('node-uuid');
 
     var colors = ["red", "green", "pink", "orange", "blue", "yellow", "purple", "grey", "darkred", "darkblue"];
 
@@ -9,6 +10,7 @@ module.exports = function (app, server) {
     function getData() {
         return players.map(function (p) {
             return {
+                id: p.id,
                 position: p.position,
                 color: p.color,
                 wedges: p.wedges,
@@ -39,55 +41,65 @@ module.exports = function (app, server) {
         return c || "white";
     }
 
-    function newPlayer(socket) {
-        var player = {
-            socket: socket,
-            color: nextColor(),
-            position: [300, 300],
-            wedges: []
-        };
-        socket.player = player;
-        players.push(player);
-        socket.emit('player', {
-            color: player.color
-        });
-        socket.emit('update', getData());
+    function sendUpdate() {
+        io.emit('update', getData());
+    }
+
+    function newConnection(socket) {
+
         socket.on('disconnect', function () {
-            console.log('user disconnected');
-            players.splice(players.indexOf(player), 1);
-            io.emit('update', getData());
+            if (socket.player) {
+                players.splice(players.indexOf(socket.player), 1);
+                io.emit('update', getData());
+            }
+        });
+        socket.on('join', function (name) {
+            var id = uuid.v4();
+            var player = {
+                id: id,
+                color: nextColor(),
+                wedges: [],
+                name: name,
+                position: [800, 800]
+            };
+            socket.player = player;
+            players.push(player);
+            sendUpdate();
+            socket.emit('accept', player);
         });
         socket.on('move', function (where) {
             var p = socket.player;
-            p.position = where;
-            io.emit('update', getData());
+            if (p) {
+                p.position = where;
+                sendUpdate();
+            }
         });
         socket.on('wedge', function (wedges) {
             var p = socket.player;
-            p.wedges = wedges;
-            io.emit('update', getData());
-        });
-        socket.on('name', function (name) {
-            console.log(name);
-            var p = socket.player;
-            p.name = name;
-            io.emit('update', getData());
+            if (p) {
+                p.wedges = wedges;
+                sendUpdate();
+            }
         });
         socket.on('roll', function () {
             var roll = Math.floor(Math.random() * 6) + 1;
-            io.emit('roll', {
-                player: {
-                    name: socket.player.name,
-                    color: socket.player.color
-                },
-                roll: roll
-            });
+            if (socket.player) {
+                io.emit('roll', {
+                    player: {
+                        name: socket.player.name,
+                        color: socket.player.color
+                    },
+                    roll: roll
+                });
+            }
         });
+        sendUpdate(socket);
+
     }
 
     io.on('connection', function (socket) {
         console.log('a user connected');
-        newPlayer(socket);
+        newConnection(socket);
 
     });
 

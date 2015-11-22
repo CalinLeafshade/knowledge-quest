@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="knowledge-quest">
 
 <head>
     <meta charset="utf-8">
@@ -11,55 +11,38 @@
 	<![endif]-->
 </head>
 
-<body>
-    <div id="board">
-
+<body ng-controller="MainCtrl as vm">
+    <div id="board" ng-click="vm.moveClick($event)">
+        <div ng-repeat="p in vm.players" class="piece {{ p.color }}" ng-style="{ 'left': p.position[0] + 'px', 'top': p.position[1] + 'px', 'background-color': vm.pieceColors[p.color] }">
+            <div ng-repeat="w in p.wedges" class="wedge {{ w }}"></div>
+            <div class="border" ng-style="{ 'border-color': vm.pieceColors[p.color] }"></div>
+            <label ng-bind="p.name"></label>
+        </div>
     </div>
     <div id="controls">
 
         <div class="form-group">
             <label for="exampleInputEmail1">Name</label>
-            <input type="text" class="form-control" id="txtName" placeholder="Your Name">
+            <input type="text" class="form-control" id="txtName" ng-model="vm.name" placeholder="Your Name">
+            <button class="btn btn-primary" ng-click="vm.join()" ng-hide="vm.joined">Join</button>
         </div>
-        <div class="form-group">
-            <label for="exampleInputEmail1">Wedges</label>
+        <div ng-show="vm.joined">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Wedges</label>
+            </div>
+            <div class="checkbox" ng-repeat="wedge in vm.wedgeColors" <label>
+                <input type="checkbox" name="wedges[]" value="{{wedge}}" ng-checked="vm.me.wedges.indexOf(wedge) > -1" ng-click="vm.toggleWedge(wedge)"> {{wedge}}
+                </label>
+            </div>
+            <label id="stat"></label>
+            <button class="btn btn-block btn-primary" id="roll" ng-click="vm.rollDice()">Roll Dice</button>
+            <label id="roll-text" ng-show="vm.lastRoll != null">{{ vm.lastRoll.who }} rolled a {{ vm.lastRoll.roll }}</label>
         </div>
-        <div class="checkbox">
-            <label>
-                <input class="wedge-checkbox" type="checkbox" data-color="blue"> Blue
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input class="wedge-checkbox" type="checkbox" data-color="pink"> Pink
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input class="wedge-checkbox" type="checkbox" data-color="yellow"> Yellow
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input class="wedge-checkbox" type="checkbox" data-color="brown"> Brown
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input class="wedge-checkbox" type="checkbox" data-color="green"> Green
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input class="wedge-checkbox" type="checkbox" data-color="orange"> Orange
-            </label>
-        </div>
-        <label id="stat"></label>
-        <button class="btn btn-block btn-primary" id="roll">Roll Dice</button>
-        <label id="roll-text"></label>
     </div>
+    <script src="/lib/lodash/lodash.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/lib/jquery/jquery.js"></script>
+    <script src="/lib/angular/angular.js"></script>
+    <script src="/lib/angular-socket-io/socket.js"></script>
     <script src="/app.js"></script>
 </body>
 
