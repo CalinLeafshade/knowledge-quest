@@ -7,11 +7,18 @@ $(function () {
         $('.piece').remove();
         players.forEach(function (p) {
             console.log('lol', p);
-            $('<div>').addClass('piece').css({
+            var $elem = $('<div>').addClass('piece').css({
                 top: p.position[1] + "px",
                 left: p.position[0] + "px",
                 "background-color": p.color
-            }).appendTo('#board');
+            })
+
+            p.wedges.forEach(function (w) {
+                $('<div>').addClass("wedge").addClass(w).appendTo($elem);
+            });
+            $('<label>').text(p.name).appendTo($elem);
+
+            $elem.appendTo('#board');
         });
     }
 
@@ -30,9 +37,41 @@ $(function () {
         }
     });
 
+    socket.on('roll', function (data) {
+        var name = data.player.name || data.player.color;
+        $('#roll-text').text(name + " rolled a " + data.roll);
+    });
+
+    socket.on('player', function (player) {
+        $("#stat").text("You are " + player.color);
+    });
+
     $('#board').on('click', function (e) {
         var offset = $(this).offset();
         socket.emit("move", [e.pageX - offset.left, e.pageY - offset.top]);
+    });
+
+    $('.wedge-checkbox').prop('checked', false);
+
+    $('.wedge-checkbox').on('change', function (ev) {
+
+        var values = [];
+        $('.wedge-checkbox').each(function (i, e) {
+            var $e = $(e);
+            if (e.checked) {
+                values.push($e.data('color'));
+            }
+        });
+        socket.emit("wedge", values);
+
+    });
+
+    $('#txtName').on('change keypress', function (ev) {
+        socket.emit('name', $(this).val());
+    });
+
+    $('#roll').on('click', function () {
+        socket.emit('roll');
     });
 
 

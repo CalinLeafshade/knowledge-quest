@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Knowledge Quest</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -13,6 +14,49 @@
 <body>
     <div id="board">
 
+    </div>
+    <div id="controls">
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Name</label>
+            <input type="text" class="form-control" id="txtName" placeholder="Your Name">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Wedges</label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input class="wedge-checkbox" type="checkbox" data-color="blue"> Blue
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input class="wedge-checkbox" type="checkbox" data-color="pink"> Pink
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input class="wedge-checkbox" type="checkbox" data-color="yellow"> Yellow
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input class="wedge-checkbox" type="checkbox" data-color="brown"> Brown
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input class="wedge-checkbox" type="checkbox" data-color="green"> Green
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input class="wedge-checkbox" type="checkbox" data-color="orange"> Orange
+            </label>
+        </div>
+        <label id="stat"></label>
+        <button class="btn btn-block btn-primary" id="roll">Roll Dice</button>
+        <label id="roll-text"></label>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/lib/jquery/jquery.js"></script>

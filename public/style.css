@@ -1,13 +1,76 @@
+#controls {
+  position: fixed;
+  width: 250px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 20px;
+}
 #board {
   background: url('/img/board.jpg');
   width: 1600px;
   height: 1600px;
   position: relative;
+  padding: 1px;
 }
 #board .piece {
-  position: absolute;
   width: 100px;
   height: 100px;
+  border-radius: 50%;
+  background: red;
+  position: absolute;
   margin-left: -50px;
   margin-top: -50px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
+}
+#board .piece label {
+  position: absolute;
+  width: 100px;
+  top: 105px;
+  color: white;
+  font-size: 18px;
+  text-shadow: 0 0 5px black;
+  text-align: center;
+}
+#board .piece .wedge {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  z-index: 100;
+  display: block;
+  border-style: solid;
+  border-width: 0 25px 40px 25px;
+  left: 50%;
+  top: 50%;
+  margin-left: -25px;
+  -webkit-transform-origin: 50% 0;
+          transform-origin: 50% 0;
+}
+#board .piece .wedge.blue {
+  border-color: transparent transparent #5FBFCD transparent;
+}
+#board .piece .wedge.pink {
+  border-color: transparent transparent #FD85B3 transparent;
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+#board .piece .wedge.green {
+  border-color: transparent transparent #4DAB53 transparent;
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+#board .piece .wedge.orange {
+  border-color: transparent transparent #F17B35 transparent;
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+#board .piece .wedge.brown {
+  border-color: transparent transparent #A86C38 transparent;
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+#board .piece .wedge.yellow {
+  border-color: transparent transparent #EFDB3A transparent;
+  -webkit-transform: rotate(300deg);
+          transform: rotate(300deg);
 }

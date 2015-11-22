@@ -10,7 +10,9 @@ module.exports = function (app, server) {
         return players.map(function (p) {
             return {
                 position: p.position,
-                color: p.color
+                color: p.color,
+                wedges: p.wedges,
+                name: p.name
             }
         });
     }
@@ -27,13 +29,28 @@ module.exports = function (app, server) {
         })
     }
 
+    function nextColor() {
+        var playerColors = players.map(function (p) {
+            return p.color
+        });
+        var c = colors.find(function (cc) {
+            return playerColors.indexOf(cc) == -1;
+        });
+        return c || "white";
+    }
+
     function newPlayer(socket) {
         var player = {
             socket: socket,
-            color: colors[players.length],
-            position: [300, 300]
+            color: nextColor(),
+            position: [300, 300],
+            wedges: []
         };
+        socket.player = player;
         players.push(player);
+        socket.emit('player', {
+            color: player.color
+        });
         socket.emit('update', getData());
         socket.on('disconnect', function () {
             console.log('user disconnected');
@@ -41,9 +58,30 @@ module.exports = function (app, server) {
             io.emit('update', getData());
         });
         socket.on('move', function (where) {
-            var p = findPlayer(socket);
+            var p = socket.player;
             p.position = where;
             io.emit('update', getData());
+        });
+        socket.on('wedge', function (wedges) {
+            var p = socket.player;
+            p.wedges = wedges;
+            io.emit('update', getData());
+        });
+        socket.on('name', function (name) {
+            console.log(name);
+            var p = socket.player;
+            p.name = name;
+            io.emit('update', getData());
+        });
+        socket.on('roll', function () {
+            var roll = Math.floor(Math.random() * 6) + 1;
+            io.emit('roll', {
+                player: {
+                    name: socket.player.name,
+                    color: socket.player.color
+                },
+                roll: roll
+            });
         });
     }
 
