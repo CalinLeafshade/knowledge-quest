@@ -2,7 +2,7 @@ module.exports = function (app, server) {
 
     var io = require('socket.io').listen(server);
 
-    var colors = ["red", "green", "pink", "orange", "blue"];
+    var colors = ["red", "green", "pink", "orange", "blue", "yellow", "purple", "grey", "darkred", "darkblue"];
 
     var players = [];
 
